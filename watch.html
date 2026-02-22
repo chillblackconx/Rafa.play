@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rafa Play - Regarder</title>
+<link rel="icon" href="assets/favicon.ico">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="futuristic">
+
+<header class="header">
+    <div class="logo-container" onclick="window.location='index.html'">
+        <img src="assets/logo.png" class="logo">
+        <h1>Rafa Play</h1>
+    </div>
+</header>
+
+<main class="watch-page">
+    <video id="player" controls class="player"></video>
+    <h2 id="videoTitle">Chargement...</h2>
+
+    <div class="video-stats">
+        <span id="views">0 vues</span>
+        <button onclick="likeVideo()">❤️ Like</button>
+        <span id="likes">0</span>
+    </div>
+</main>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
