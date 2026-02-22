@@ -2,31 +2,30 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rafa Play - Regarder</title>
-<link rel="icon" href="assets/favicon.ico">
+<title>Rafa Play - Watch</title>
+
+<link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="./assets/favicon.ico">
+
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="script.js"></script>
 </head>
-<body class="futuristic">
+<body>
 
 <header class="header">
-    <div class="logo-container" onclick="window.location='index.html'">
+    <div class="logo-container" onclick="location.href='index.html'">
         <img src="assets/logo.png" class="logo">
-        <h1>Rafa Play</h1>
+        <h1 class="main-title">Rafa Play</h1>
     </div>
 </header>
 
-<main class="watch-page">
-    <video id="player" controls class="player"></video>
-    <h2 id="videoTitle">Chargement...</h2>
+<div class="container">
+    <video id="player" controls width="100%"></video>
+    <h2 id="videoTitle"></h2>
+    <p id="channel"></p>
+</div>
 
-    <div class="video-stats">
-        <span id="views">0 vues</span>
-        <button onclick="likeVideo()">❤️ Like</button>
-        <span id="likes">0</span>
-    </div>
-</main>
-
-<script type="module" src="script.js"></script>
 </body>
 </html>
