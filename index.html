@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rafa Play</title>
+<link rel="icon" href="assets/favicon.ico">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="futuristic">
 
+<header class="header">
+    <div class="logo-container" onclick="goHome()">
+        <img src="assets/logo.png" class="logo">
+        <h1>Rafa Play</h1>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Rechercher une vidéo...">
+        <button onclick="searchVideos()">🔍</button>
+    </div>
+
+    <div class="user-actions">
+        <button onclick="toggleAuth()">👤 Compte</button>
+        <button onclick="openUpload()">⬆ Upload</button>
+        <button onclick="window.location='shorts.html'">🐱 Meow</button>
+    </div>
+</header>
+
+<nav class="sidebar">
+    <button onclick="goHome()">🏠 Accueil</button>
+    <button onclick="window.location='shorts.html'">🐱 Meow Shorts</button>
+</nav>
+
+<main class="main">
+    <h2>🔥 Vidéos</h2>
+    <div id="videoGrid" class="video-grid"></div>
+</main>
+
+<!-- MODAL UPLOAD -->
+<div id="uploadModal" class="modal">
+    <div class="modal-content">
+        <h2>Upload une vidéo</h2>
+        <input type="text" id="title" placeholder="Titre">
+        <input type="text" id="thumbnail" placeholder="Thumbnail URL (optionnel)">
+        <input type="text" id="videoUrl" placeholder="URL vidéo (.mp4 conseillé)">
+        <button onclick="uploadVideo()">Publier 🚀</button>
+        <button onclick="closeUpload()">Fermer</button>
+    </div>
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
