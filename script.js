@@ -1,142 +1,98 @@
-import { supabase } from "./supabase/supabase.js";
+// ⚙️ Supabase
+const SUPABASE_URL = "https://svvsvwvaskvyvcxudbdg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_qYyRmfzb-ZUXXuX_90T1Rw_MGmrQ22X";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let videos = [];
 let currentUser = null;
 
-function generateID(){
-    return Math.random().toString(36).substring(2,10);
+// ==== MODAL ====
+function openLogin(){ document.getElementById("loginModal").style.display="flex"; }
+function closeLogin(){ document.getElementById("loginModal").style.display="none"; }
+function openUpload(){
+    if(!currentUser){ alert("Connecte-toi !"); return; }
+    document.getElementById("uploadModal").style.display="flex";
 }
+function closeUpload(){ document.getElementById("uploadModal").style.display="none"; }
 
-window.goHome = () => window.location = "index.html";
+// ==== REGISTER / LOGIN ====
+async function register(){
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const logoFile = document.getElementById("userLogo").files[0];
 
-window.toggleAuth = async () => {
-    if(currentUser){
-        await supabase.auth.signOut();
-        location.reload();
-        return;
+    if(!username || !password){ alert("Remplis tous les champs !"); return; }
+
+    // Upload logo sur storage
+    let logoUrl = "";
+    if(logoFile){
+        const { data, error } = await supabase.storage.from("videos").upload("logos/"+username+"_"+Date.now(), logoFile);
+        logoUrl = supabase.storage.from("videos").getPublicUrl(data.path).data.publicUrl;
     }
 
-    const email = prompt("Email:");
-    const password = prompt("Mot de passe:");
-
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.from("users").insert([{
+        username: username,
+        password: password,
+        logo: logoUrl
+    }]);
 
     if(error){
-        await supabase.auth.signUp({ email, password });
+        alert("Erreur : "+error.message);
+    } else {
+        currentUser = {username, logo: logoUrl};
         alert("Compte créé !");
-    }else{
-        currentUser = data.user;
-        alert("Connecté !");
-        location.reload();
+        closeLogin();
     }
-};
-
-async function fetchVideos(){
-    const { data } = await supabase.from("videos").select("*").order("created_at",{ascending:false});
-    videos = data || [];
-    loadVideos();
-    loadShorts();
 }
 
-function loadVideos(){
-    const grid = document.getElementById("videoGrid");
-    if(!grid) return;
-    grid.innerHTML = "";
-
-    videos.forEach(v=>{
-        const card = document.createElement("div");
-        card.className="video-card";
-        card.innerHTML=`
-            <img class="thumbnail" src="${v.thumbnail || 'https://via.placeholder.com/300x150'}">
-            <div class="video-info">
-                <h3>${v.title}</h3>
-                <p>${v.channel}</p>
-                <p>👁 ${v.views} vues • ❤️ ${v.likes}</p>
-            </div>`;
-        card.onclick=()=>window.location=`watch.html?v=${v.id}`;
-        grid.appendChild(card);
-    });
-}
-
-window.uploadVideo = async ()=>{
+// ==== UPLOAD VIDEO ====
+async function uploadVideo(){
     if(!currentUser){ alert("Connecte-toi !"); return; }
 
     const title = document.getElementById("title").value;
-    const thumbnail = document.getElementById("thumbnail").value;
-    const url = document.getElementById("videoUrl").value;
+    const thumbFile = document.getElementById("thumbnail").files[0];
+    const videoFile = document.getElementById("videoFile").files[0];
 
-    if(!title || !url) return alert("Champs manquants");
+    if(!title || !thumbFile || !videoFile){ alert("Tout remplir !"); return; }
 
+    const id = Math.random().toString(36).substring(2,10);
+
+    // Upload thumbnail
+    const { data: thumbData } = await supabase.storage.from("videos").upload("thumb_"+id+"_"+Date.now(), thumbFile);
+    const thumbUrl = supabase.storage.from("videos").getPublicUrl(thumbData.path).data.publicUrl;
+
+    // Upload video
+    const { data: vidData } = await supabase.storage.from("videos").upload("video_"+id+"_"+Date.now(), videoFile);
+    const videoUrl = supabase.storage.from("videos").getPublicUrl(vidData.path).data.publicUrl;
+
+    // Insert en DB
     await supabase.from("videos").insert([{
-        id:generateID(),
-        title,
-        thumbnail,
-        url,
-        views:0,
-        likes:0,
-        channel:currentUser.email
+        id: id,
+        title: title,
+        thumbnail: thumbUrl,
+        video_url: videoUrl,
+        channel: currentUser.username,
+        views: 0,
+        likes: 0
     }]);
 
+    alert("Vidéo upload !");
     closeUpload();
-    fetchVideos();
-};
+    loadVideos();
+}
 
-window.likeVideo = async ()=>{
-    const id = new URLSearchParams(window.location.search).get("v");
-    const video = videos.find(v=>v.id===id);
-    await supabase.from("videos").update({likes:video.likes+1}).eq("id",id);
-    location.reload();
-};
-
-window.searchVideos = ()=>{
-    const q = document.getElementById("searchInput").value.toLowerCase();
-    const filtered = videos.filter(v=>v.title.toLowerCase().includes(q));
+// ==== LOAD VIDEOS ====
+async function loadVideos(){
+    const { data } = await supabase.from("videos").select("*").order("created_at",{ascending:false});
     const grid = document.getElementById("videoGrid");
     grid.innerHTML="";
-    filtered.forEach(v=>{
-        const card=document.createElement("div");
-        card.className="video-card";
-        card.innerHTML=`<img class="thumbnail" src="${v.thumbnail}">
-        <div class="video-info"><h3>${v.title}</h3></div>`;
-        card.onclick=()=>window.location=`watch.html?v=${v.id}`;
+    data.forEach(v=>{
+        const card = document.createElement("div");
+        card.className="card";
+        card.innerHTML=`<img src="${v.thumbnail}" class="thumb"><div class="title">${v.title}</div>`;
+        card.onclick = ()=> window.location="watch.html?v="+v.id;
         grid.appendChild(card);
     });
-};
-
-window.openUpload=()=>document.getElementById("uploadModal").style.display="flex";
-window.closeUpload=()=>document.getElementById("uploadModal").style.display="none";
-
-async function loadWatch(){
-    const player=document.getElementById("player");
-    if(!player) return;
-    const id=new URLSearchParams(window.location.search).get("v");
-    const { data }=await supabase.from("videos").select("*").eq("id",id).single();
-    if(!data) return;
-    player.src=data.url;
-    document.getElementById("videoTitle").textContent=data.title;
-    document.getElementById("views").textContent=data.views+" vues";
-    document.getElementById("likes").textContent=data.likes;
-    await supabase.from("videos").update({views:data.views+1}).eq("id",id);
 }
 
-function loadShorts(){
-    const container=document.getElementById("shortsContainer");
-    if(!container) return;
-    container.innerHTML="";
-    videos.forEach(v=>{
-        const vid=document.createElement("video");
-        vid.src=v.url;
-        vid.controls=true;
-        vid.className="shorts-video";
-        container.appendChild(vid);
-    });
-}
-
-async function init(){
-    const { data }=await supabase.auth.getUser();
-    currentUser=data.user;
-    await fetchVideos();
-    await loadWatch();
-}
-
-init();
+// ==== INIT ====
+loadVideos();
