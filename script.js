@@ -1,144 +1,67 @@
-let currentUser = null;
+document.addEventListener("DOMContentLoaded", () => {
 
-const loginModal = document.getElementById("loginModal");
-const uploadModal = document.getElementById("uploadModal");
+    const videoGrid = document.getElementById("videoGrid");
+    const uploadBtn = document.getElementById("openUpload");
+    const uploadModal = document.getElementById("uploadModal");
+    const closeUpload = document.getElementById("closeUpload");
+    const saveVideo = document.getElementById("saveVideo");
 
-document.getElementById("accountBtn")
-  .addEventListener("click", () => {
-    loginModal.style.display = "flex";
-  });
+    let videos = JSON.parse(localStorage.getItem("videos")) || [];
 
-document.getElementById("uploadBtn")
-  .addEventListener("click", () => {
-    if(!currentUser){
-      alert("Connecte-toi !");
-      return;
-    }
-    uploadModal.style.display = "flex";
-  });
+    // ===== AFFICHER VIDEOS =====
+    function renderVideos() {
+        videoGrid.innerHTML = "";
 
-document.getElementById("closeLogin")
-  .addEventListener("click", () => {
-    loginModal.style.display = "none";
-  });
+        videos.forEach((video, index) => {
 
-document.getElementById("closeUpload")
-  .addEventListener("click", () => {
-    uploadModal.style.display = "none";
-  });
+            const card = document.createElement("div");
+            card.className = "card";
 
-document.getElementById("createAccount")
-  .addEventListener("click", async () => {
+            card.innerHTML = `
+                <img src="${video.thumbnail}" class="thumb">
+                <div class="title">${video.title}</div>
+            `;
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const logoFile = document.getElementById("userLogo").files[0];
+            card.addEventListener("click", () => {
+                window.location.href = "watch.html?v=" + index;
+            });
 
-    if(!username || !password){
-        alert("Remplis tout !");
-        return;
-    }
-
-    let logoUrl = "";
-
-    if(logoFile){
-        const { data } = await supabaseClient
-            .storage
-            .from("logos")
-            .upload(username + "_" + Date.now(), logoFile);
-
-        logoUrl = supabaseClient
-            .storage
-            .from("logos")
-            .getPublicUrl(data.path).data.publicUrl;
-    }
-
-    const { error } = await supabaseClient
-        .from("users")
-        .insert([{ id: username, username, password, logo: logoUrl }]);
-
-    if(error){
-        alert(error.message);
-        return;
-    }
-
-    currentUser = { username, logo: logoUrl };
-    alert("Compte créé !");
-    loginModal.style.display = "none";
-});
-
-document.getElementById("publishVideo")
-  .addEventListener("click", async () => {
-
-    const title = document.getElementById("titleInput").value;
-    const thumbFile = document.getElementById("thumbnailInput").files[0];
-    const videoFile = document.getElementById("videoInput").files[0];
-
-    if(!title || !thumbFile || !videoFile){
-        alert("Remplis tout !");
-        return;
-    }
-
-    const id = Math.random().toString(36).substring(2,10);
-
-    const { data: thumbData } = await supabaseClient
-        .storage
-        .from("videos")
-        .upload("thumb_" + id, thumbFile);
-
-    const thumbUrl = supabaseClient
-        .storage
-        .from("videos")
-        .getPublicUrl(thumbData.path).data.publicUrl;
-
-    const { data: videoData } = await supabaseClient
-        .storage
-        .from("videos")
-        .upload("video_" + id, videoFile);
-
-    const videoUrl = supabaseClient
-        .storage
-        .from("videos")
-        .getPublicUrl(videoData.path).data.publicUrl;
-
-    await supabaseClient
-        .from("videos")
-        .insert([{
-            id,
-            title,
-            thumbnail: thumbUrl,
-            video_url: videoUrl,
-            channel: currentUser.username,
-            views: 0,
-            likes: 0
-        }]);
-
-    alert("Vidéo publiée !");
-    uploadModal.style.display = "none";
-    loadVideos();
-});
-
-async function loadVideos(){
-    const { data } = await supabaseClient
-        .from("videos")
-        .select("*")
-        .order("created_at", { ascending:false });
-
-    const grid = document.getElementById("videoGrid");
-    grid.innerHTML = "";
-
-    data.forEach(v => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-            <img src="${v.thumbnail}" class="thumb">
-            <div class="title">${v.title}</div>
-        `;
-        card.addEventListener("click", () => {
-            window.location = "watch.html?v=" + v.id;
+            videoGrid.appendChild(card);
         });
-        grid.appendChild(card);
-    });
-}
+    }
 
-loadVideos();
+    // ===== OUVRIR MODAL =====
+    uploadBtn.addEventListener("click", () => {
+        uploadModal.style.display = "flex";
+    });
+
+    closeUpload.addEventListener("click", () => {
+        uploadModal.style.display = "none";
+    });
+
+    // ===== SAVE VIDEO =====
+    saveVideo.addEventListener("click", () => {
+
+        const title = document.getElementById("videoTitle").value;
+        const thumbnail = document.getElementById("videoThumbnail").value;
+        const videoUrl = document.getElementById("videoUrl").value;
+
+        if (!title || !thumbnail || !videoUrl) {
+            alert("Remplis tout !");
+            return;
+        }
+
+        videos.push({
+            title: title,
+            thumbnail: thumbnail,
+            url: videoUrl
+        });
+
+        localStorage.setItem("videos", JSON.stringify(videos));
+
+        uploadModal.style.display = "none";
+        renderVideos();
+    });
+
+    renderVideos();
+});
