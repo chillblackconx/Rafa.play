@@ -1,102 +1,87 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #1a0033, #0d0d2b);
-    color: white;
+
+/* ===== PAGES ANIMATION ===== */
+
+.page {
+    transition: all 0.35s ease;
+    opacity: 1;
 }
 
-/* ===== HEADER ===== */
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 40px;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(10px);
+/* ===== FADE SLIDE IN ===== */
+
+.page-enter {
+    opacity: 0;
+    transform: translateY(20px);
 }
 
-.logo {
-    height: 90px; /* LOGO PLUS GRAND */
+.page-enter-active {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/* ===== GRID VIDEOS ===== */
-#videoGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
-    padding: 40px;
-}
+/* ===== CARD ANIMATION ===== */
 
 .card {
-    background: rgba(255,255,255,0.05);
-    border-radius: 20px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: 0.3s;
-    border: 2px solid transparent;
+    transition: all 0.4s ease;
 }
 
 .card:hover {
-    transform: scale(1.05);
-    border: 2px solid #a855f7;
-    box-shadow: 0 0 20px #a855f7;
+    transform: scale(1.07);
+    box-shadow: 0 0 25px #a855f7;
 }
 
-.thumb {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-}
+/* ===== BUTTON ULTRA STYLE ===== */
 
-.title {
-    padding: 15px;
-    font-weight: bold;
-}
-
-/* ===== BOUTONS FUTURISTES ===== */
 .button {
     padding: 12px 25px;
     border-radius: 30px;
-    border: none;
     cursor: pointer;
     font-weight: bold;
     font-size: 15px;
-    transition: 0.3s;
+    border: none;
     background: linear-gradient(45deg, #9333ea, #ec4899, #3b82f6);
     background-size: 300%;
     color: white;
+    transition: all 0.4s ease;
     box-shadow: 0 0 15px rgba(168,85,247,0.6);
 }
 
 .button:hover {
     background-position: right;
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(236,72,153,0.9);
+}
+
+/* ===== LOGO GLOW ===== */
+
+.logo {
+    height: 110px;
+    filter: drop-shadow(0 0 15px #9333ea);
+    transition: 0.4s;
+}
+
+.logo:hover {
     transform: scale(1.08);
-    box-shadow: 0 0 25px rgba(236,72,153,0.9);
+    filter: drop-shadow(0 0 25px #ec4899);
 }
 
-/* ===== INPUT ===== */
-input {
-    padding: 10px;
-    border-radius: 15px;
-    border: none;
-    margin: 5px 0;
+/* ===== VIDEO THUMB ===== */
+
+.thumb {
     width: 100%;
+    height: 180px;
+    object-fit: cover;
+    transition: 0.3s;
 }
 
-/* ===== MODAL ===== */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    justify-content: center;
-    align-items: center;
+.thumb:hover {
+    filter: brightness(1.2);
 }
 
-.modal-content {
-    background: #1f1147;
-    padding: 30px;
-    border-radius: 20px;
-    width: 350px;
-    box-shadow: 0 0 30px #9333ea;
+/* ===== GRID ===== */
+
+#videoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 40px;
 }
