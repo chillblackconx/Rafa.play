@@ -6,9 +6,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeUpload = document.getElementById("closeUpload");
     const saveVideo = document.getElementById("saveVideo");
 
+    if (!uploadBtn) {
+        console.log("Erreur: bouton openUpload introuvable");
+        return;
+    }
+
     let videos = JSON.parse(localStorage.getItem("videos")) || [];
 
-    // ===== AFFICHER VIDEOS =====
     function renderVideos() {
         videoGrid.innerHTML = "";
 
@@ -23,14 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
 
             card.addEventListener("click", () => {
-                window.location.href = "watch.html?v=" + index;
+                alert("Vidéo cliquée: " + video.title);
             });
 
             videoGrid.appendChild(card);
         });
     }
 
-    // ===== OUVRIR MODAL =====
     uploadBtn.addEventListener("click", () => {
         uploadModal.style.display = "flex";
     });
@@ -39,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         uploadModal.style.display = "none";
     });
 
-    // ===== SAVE VIDEO =====
     saveVideo.addEventListener("click", () => {
 
         const title = document.getElementById("videoTitle").value;
@@ -51,11 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        videos.push({
-            title: title,
-            thumbnail: thumbnail,
-            url: videoUrl
-        });
+        videos.push({ title, thumbnail, videoUrl });
 
         localStorage.setItem("videos", JSON.stringify(videos));
 
