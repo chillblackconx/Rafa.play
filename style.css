@@ -1,125 +1,102 @@
-/* ===== BODY ===== */
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:linear-gradient(135deg,#0a0014,#020024,#0f0030);
-    color:white;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1a0033, #0d0d2b);
+    color: white;
 }
 
 /* ===== HEADER ===== */
-header{
-    padding:30px 0;
-    text-align:center;
-    background:linear-gradient(90deg,#2a004f,#001f4f,#3a0066);
-    border-bottom:2px solid #ff00ff;
-    box-shadow:0 0 40px rgba(255,0,255,0.4);
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
 }
 
-/* ===== TITLE ===== */
-.title{
-    font-size:55px;
-    margin-top:10px;
-    background:linear-gradient(90deg,#ff00ff,#00ccff,#ff66ff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    text-shadow:0 0 25px rgba(255,0,255,0.6);
+.logo {
+    height: 90px; /* LOGO PLUS GRAND */
 }
 
-/* ===== LOGO ===== */
-header img{
-    height:170px;
-    filter:drop-shadow(0 0 35px #ff00ff);
+/* ===== GRID VIDEOS ===== */
+#videoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 40px;
 }
 
-/* ===== BUTTONS ===== */
-button{
-    background:linear-gradient(90deg,#ff00ff,#00ccff);
-    border:none;
-    padding:12px 20px;
-    margin:5px;
-    border-radius:14px;
-    font-weight:bold;
-    color:white;
-    cursor:pointer;
-    box-shadow:0 0 15px rgba(255,0,255,0.7);
-    transition:0.25s;
+.card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid transparent;
 }
 
-button:hover{
-    transform:scale(1.1);
-    box-shadow:0 0 25px #ff00ff, 0 0 40px #00ccff;
+.card:hover {
+    transform: scale(1.05);
+    border: 2px solid #a855f7;
+    box-shadow: 0 0 20px #a855f7;
 }
 
-/* ===== GRID ===== */
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-    gap:25px;
+.thumb {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
 }
 
-/* ===== CARD ===== */
-.card{
-    background:linear-gradient(145deg,#14002b,#001a33,#1a0033);
-    border-radius:20px;
-    overflow:hidden;
-    cursor:pointer;
-    transition:0.3s;
-    border:1px solid rgba(255,0,255,0.3);
-    box-shadow:0 0 20px rgba(0,255,255,0.15);
+.title {
+    padding: 15px;
+    font-weight: bold;
 }
 
-.card:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 30px #ff00ff, 0 0 50px #00ccff;
+/* ===== BOUTONS FUTURISTES ===== */
+.button {
+    padding: 12px 25px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+    transition: 0.3s;
+    background: linear-gradient(45deg, #9333ea, #ec4899, #3b82f6);
+    background-size: 300%;
+    color: white;
+    box-shadow: 0 0 15px rgba(168,85,247,0.6);
 }
 
-/* ===== THUMBNAIL ===== */
-.thumb{
-    width:100%;
-    height:190px;
-    object-fit:cover;
-}
-
-/* ===== VIDEO TITLE ===== */
-.title{
-    padding:12px;
-    font-weight:bold;
+.button:hover {
+    background-position: right;
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(236,72,153,0.9);
 }
 
 /* ===== INPUT ===== */
-input{
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border-radius:12px;
-    border:1px solid #ff00ff;
-    background:#0a001a;
-    color:white;
-    outline:none;
-}
-
-input:focus{
-    box-shadow:0 0 15px #ff00ff;
+input {
+    padding: 10px;
+    border-radius: 15px;
+    border: none;
+    margin: 5px 0;
+    width: 100%;
 }
 
 /* ===== MODAL ===== */
-.modal{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,20,0.9);
-    justify-content:center;
-    align-items:center;
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
 }
 
-.box{
-    background:linear-gradient(145deg,#1a0033,#000d2a);
-    padding:30px;
-    border-radius:20px;
-    width:350px;
-    border:1px solid #ff00ff;
-    box-shadow:0 0 35px rgba(255,0,255,0.5);
+.modal-content {
+    background: #1f1147;
+    padding: 30px;
+    border-radius: 20px;
+    width: 350px;
+    box-shadow: 0 0 30px #9333ea;
 }
