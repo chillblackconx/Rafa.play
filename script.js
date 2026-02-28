@@ -1,65 +1,117 @@
-document.addEventListener("DOMContentLoaded", () => {
+const supabase = window.supabase.createClient(
+  "https://svvsvwvaskvyvcxudbdg.supabase.co",
+  "sb_publishable_qYyRmfzb-ZUXXuX_90T1Rw_MGmrQ22X"
+);
 
-    const videoGrid = document.getElementById("videoGrid");
-    const uploadBtn = document.getElementById("openUpload");
-    const uploadModal = document.getElementById("uploadModal");
-    const closeUpload = document.getElementById("closeUpload");
-    const saveVideo = document.getElementById("saveVideo");
+document.addEventListener("DOMContentLoaded", async () => {
 
-    if (!uploadBtn) {
-        console.log("Erreur: bouton openUpload introuvable");
-        return;
+  const authArea = document.getElementById("authArea");
+  const uploadBtn = document.getElementById("openUpload");
+  const uploadModal = document.getElementById("uploadModal");
+  const publish = document.getElementById("publish");
+  const videoGrid = document.getElementById("videoGrid");
+
+  let { data: { user } } = await supabase.auth.getUser();
+
+  // ===== AUTH UI =====
+  function renderAuth() {
+    if (user) {
+      authArea.innerHTML = `
+        ${user.email}
+        <button id="logout" class="button">Logout</button>
+      `;
+
+      document.getElementById("logout").addEventListener("click", async () => {
+        await supabase.auth.signOut();
+        location.reload();
+      });
+
+    } else {
+      authArea.innerHTML = `
+        <button id="login" class="button">Login</button>
+      `;
+
+      document.getElementById("login").addEventListener("click", async () => {
+        const email = prompt("Email:");
+        const password = prompt("Password:");
+
+        await supabase.auth.signInWithPassword({ email, password });
+        location.reload();
+      });
+    }
+  }
+
+  renderAuth();
+
+  // ===== OPEN UPLOAD =====
+  uploadBtn.addEventListener("click", () => {
+
+    if (!user) {
+      alert("Tu dois être connecté !");
+      return;
     }
 
-    let videos = JSON.parse(localStorage.getItem("videos")) || [];
+    uploadModal.style.display = "flex";
+  });
 
-    function renderVideos() {
-        videoGrid.innerHTML = "";
+  // ===== UPLOAD VIDEO =====
+  publish.addEventListener("click", async () => {
 
-        videos.forEach((video, index) => {
+    const file = document.getElementById("videoFile").files[0];
+    const title = document.getElementById("videoTitle").value;
 
-            const card = document.createElement("div");
-            card.className = "card";
-
-            card.innerHTML = `
-                <img src="${video.thumbnail}" class="thumb">
-                <div class="title">${video.title}</div>
-            `;
-
-            card.addEventListener("click", () => {
-                alert("Vidéo cliquée: " + video.title);
-            });
-
-            videoGrid.appendChild(card);
-        });
+    if (!file || !title) {
+      alert("Remplis tout");
+      return;
     }
 
-    uploadBtn.addEventListener("click", () => {
-        uploadModal.style.display = "flex";
+    const fileName = Date.now() + "_" + file.name;
+
+    const { error: uploadError } = await supabase.storage
+      .from("videos")
+      .upload(fileName, file);
+
+    if (uploadError) {
+      alert("Erreur upload");
+      return;
+    }
+
+    const { data } = supabase.storage
+      .from("videos")
+      .getPublicUrl(fileName);
+
+    await supabase.from("videos").insert({
+      title: title,
+      video_url: data.publicUrl,
+      user_id: user.id
     });
 
-    closeUpload.addEventListener("click", () => {
-        uploadModal.style.display = "none";
+    alert("Vidéo publiée !");
+    location.reload();
+  });
+
+  // ===== LOAD VIDEOS =====
+  async function loadVideos() {
+    const { data } = await supabase
+      .from("videos")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    videoGrid.innerHTML = "";
+
+    data.forEach(video => {
+      const div = document.createElement("div");
+      div.className = "card";
+
+      div.innerHTML = `
+        <video src="${video.video_url}" class="thumb"></video>
+        <div class="title">${video.title}</div>
+      `;
+
+      videoGrid.appendChild(div);
     });
+  }
 
-    saveVideo.addEventListener("click", () => {
+  loadVideos();
 
-        const title = document.getElementById("videoTitle").value;
-        const thumbnail = document.getElementById("videoThumbnail").value;
-        const videoUrl = document.getElementById("videoUrl").value;
-
-        if (!title || !thumbnail || !videoUrl) {
-            alert("Remplis tout !");
-            return;
-        }
-
-        videos.push({ title, thumbnail, videoUrl });
-
-        localStorage.setItem("videos", JSON.stringify(videos));
-
-        uploadModal.style.display = "none";
-        renderVideos();
-    });
-
-    renderVideos();
 });
