@@ -1,37 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Rafa Play</title>
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Rafa Play</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
 <header>
-    <img src="assets/logo.png" class="logo">
+    <h1>Rafa Play</h1>
+    <div id="authArea"></div>
     <button id="openUpload" class="button">Upload</button>
 </header>
 
 <div id="videoGrid"></div>
 
-<!-- MODAL -->
 <div id="uploadModal" class="modal">
-    <div class="modal-content">
-        <h2>Upload Video</h2>
-
-        <input type="text" id="videoTitle" placeholder="Titre">
-        <input type="text" id="videoThumbnail" placeholder="Lien image">
-        <input type="text" id="videoUrl" placeholder="Lien vidéo">
-
-        <br><br>
-        <button id="saveVideo" class="button">Publier</button>
-        <button id="closeUpload" class="button">Fermer</button>
-    </div>
+  <div class="modal-content">
+    <h2>Upload Video</h2>
+    <input type="text" id="videoTitle" placeholder="Titre">
+    <input type="file" id="videoFile" accept="video/*">
+    <br><br>
+    <button id="publish" class="button">Publier</button>
+  </div>
 </div>
 
-<!-- IMPORTANT : script à la FIN -->
 <script src="script.js"></script>
-
 </body>
 </html>
