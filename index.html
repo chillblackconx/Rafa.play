@@ -1,56 +1,36 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Rafa Play</title>
-
-<link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
-<link rel="stylesheet" href="style.css">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
+    <title>Rafa Play</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-    <div style="text-align:center">
-        <img src="assets/logo.png" style="height:160px">
-        <h1 class="title">Rafa Play</h1>
-    </div>
-    <div style="text-align:center;margin-top:10px;">
-        <button id="accountBtn">Compte</button>
-        <button id="uploadBtn">Upload</button>
-    </div>
+    <img src="assets/logo.png" class="logo">
+    <button id="openUpload" class="button">Upload</button>
 </header>
 
-<div style="padding:20px">
-    <div id="videoGrid" class="grid"></div>
-</div>
+<div id="videoGrid"></div>
 
-<!-- MODAL COMPTE -->
-<div id="loginModal" class="modal">
-    <div class="box">
-        <h3>Créer un compte</h3>
-        <input id="username" placeholder="Username">
-        <input id="password" type="password" placeholder="Password">
-        <input id="userLogo" type="file" accept="image/*">
-        <button id="createAccount">Créer</button>
-        <button id="closeLogin">Fermer</button>
-    </div>
-</div>
-
-<!-- MODAL UPLOAD -->
+<!-- MODAL -->
 <div id="uploadModal" class="modal">
-    <div class="box">
-        <h3>Upload Vidéo</h3>
-        <input id="titleInput" placeholder="Titre">
-        <input id="thumbnailInput" type="file" accept="image/*">
-        <input id="videoInput" type="file" accept="video/*">
-        <button id="publishVideo">Publier</button>
-        <button id="closeUpload">Fermer</button>
+    <div class="modal-content">
+        <h2>Upload Video</h2>
+
+        <input type="text" id="videoTitle" placeholder="Titre">
+        <input type="text" id="videoThumbnail" placeholder="Lien image">
+        <input type="text" id="videoUrl" placeholder="Lien vidéo">
+
+        <br><br>
+        <button id="saveVideo" class="button">Publier</button>
+        <button id="closeUpload" class="button">Fermer</button>
     </div>
 </div>
 
-<script src="supabase.js"></script>
+<!-- IMPORTANT : script à la FIN -->
 <script src="script.js"></script>
 
 </body>
