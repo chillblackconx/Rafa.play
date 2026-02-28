@@ -13,31 +13,36 @@
 
 <header>
     <img src="assets/logo.png" class="logo">
-    
-    <div id="authArea"></div>
-    
-    <div class="headerButtons">
-        <div id="loginBtn" class="button">Login</div>
-        <div id="signupBtn" class="button">Sign Up</div>
-        <div id="logoutBtn" class="button" style="display:none;">Logout</div>
-        <div id="openUpload" class="button">Upload</div>
+
+    <div class="nav">
+        <div id="navHome" class="button">Home</div>
+        <div id="navLogin" class="button">Login</div>
+        <div id="navUpload" class="button">Upload</div>
     </div>
 </header>
 
-<div id="videoGrid"></div>
+<!-- PAGE HOME -->
+<div id="pageHome" class="page">
+    <h1>Bienvenue sur Rafa Play</h1>
+    <div id="videoGrid"></div>
+</div>
 
-<!-- Upload Modal -->
-<div id="uploadModal" class="modal">
-    <div class="modal-content">
-        <h2>Upload</h2>
-        <input type="text" id="videoTitle" placeholder="Titre">
-        <input type="file" id="videoFile" accept="video/*">
-        <div id="publish" class="button">Publier</div>
-        <div id="closeUpload" class="button">Fermer</div>
-    </div>
+<!-- PAGE LOGIN -->
+<div id="pageLogin" class="page" style="display:none;">
+    <h2>Connexion</h2>
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <div id="doLogin" class="button">Se connecter</div>
+</div>
+
+<!-- PAGE UPLOAD -->
+<div id="pageUpload" class="page" style="display:none;">
+    <h2>Upload</h2>
+    <input id="videoTitle" placeholder="Titre">
+    <input type="file" id="videoFile">
+    <div id="doUpload" class="button">Publier</div>
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
